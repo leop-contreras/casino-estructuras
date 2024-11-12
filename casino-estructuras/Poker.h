@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <locale>
 #define MINIMUM_BET 100
 
 using namespace std;
