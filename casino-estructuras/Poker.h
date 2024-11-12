@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <iostream>
-#include <iostream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <locale>
@@ -17,8 +17,12 @@ struct Card {
 };
 
 struct Player {
-	int bet;
+	int id;
+	string name;
+	int balance;
+	int bet = 0;
 	Card cards[2];
+	bool active = false;
 };
 
 class Poker
@@ -27,9 +31,15 @@ public:
 	Poker();
 	void generateCommunityCards();
 	void renderCard(Card);
-private:
-	Card communityCards[5];
-	int communityBet;
+	void outputPlayers();
+	void playerMenu(Player);
+	int playerJoin();
+	int playerLeave();
 	vector<Player> players;
+private:
+	int lastID;
+	Card communityCards[5];
+	int communityBet, currentBet;
+	
 };
 
