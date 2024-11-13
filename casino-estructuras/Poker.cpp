@@ -32,18 +32,19 @@ void Poker::renderCard(Card card)
 	case SPADES: printSuit = 'P'; break; //Picas
 	}
 	switch (card.value) {
-	case 10: printValue = "10"; break;
-	case 11: printValue = 'j'; break;
-	case 12: printValue = 'q'; break;
-	case 13: printValue = 'k'; break;
-	default: printValue = char(card.value + 48); break;
+	case 9: printValue = "10"; break;
+	case 10: printValue = 'j'; break;
+	case 11: printValue = 'q'; break;
+	case 12: printValue = 'k'; break;
+	case 13: printValue = 'a'; break;
+	default: printValue = char(card.value + 49); break;
 	}
 	cout << "[" << printSuit << printValue << "]";
 }
 
 void Poker::outputPlayers()
 {
-	cout << "ID | Nombre | Monto" << endl;
+	cout << "ID | Nombre | Balance" << endl;
 	for (int i = 0; i < players.size(); i++) {
 		cout << players[i].id << " - " << players[i].name << " - " << players[i].balance << endl;
 	}
@@ -68,6 +69,7 @@ void Poker::playerMenu(Player* player)
 	cout << "Tus Cartas: ";
 	renderCard(player->cards[0]); cout << " ";
 	renderCard(player->cards[1]); cout << endl;
+	valueOfHand(*player);
 	cout << "Apuesta de la Mesa: " << currentBet << "\t\t\t";
 	cout << "Tu balance: " << player->balance << endl << endl;
 	if (!player->active) {
@@ -211,6 +213,8 @@ int Poker::playerLeave()
 void Poker::nextRound()
 {
 	round++;
+	turnedCards = 5;
+	return;
 	switch (round) {
 	case 1:
 		turnedCards += 3;
@@ -221,6 +225,87 @@ void Poker::nextRound()
 	case 3:
 		turnedCards ++;
 		break;
+	}
+}
+
+int Poker::valueOfHand(Player player)
+{
+	Card fullHand[7];
+	//Clubs, Diamonds, Hearts, Spades
+	int nOfSuit[4] = { 0,0,0,0 };
+	for (int i = 0; i < 5; i++) {
+		fullHand[i] = communityCards[i];
+	}
+	for (int i = 0; i < 2; i++) {
+		fullHand[i+5] = player.cards[i];
+	}
+
+	//Sorting
+
+	//Count suit
+	for (int i = 0; i < 7; i++) {
+		switch (fullHand[i].suit) {
+		case CLUBS: nOfSuit[0]++; break; //Trebol
+		case DIAMONDS: nOfSuit[1]++; break; //Diamantes
+		case HEARTS: nOfSuit[2]++; break; //Corazones
+		case SPADES: nOfSuit[3]++; break; //Picas
+		}
+	}
+
+	//10, 9, y 6
+	if (nOfSuit[0] >= 5 || nOfSuit[1] >= 5 || nOfSuit[2] >= 5 || nOfSuit[3] >= 5) {
+		int indexSuit;
+		for (int i = 0; i < 4; i++) {
+			if (nOfSuit[i] >= 5){
+				indexSuit = i;
+			}
+		}
+		switch (indexSuit) {
+		case 0: sortFullHandBySuit(fullHand, CLUBS); break; //Trebol
+		case 1: sortFullHandBySuit(fullHand, DIAMONDS); break; //Diamantes
+		case 2: sortFullHandBySuit(fullHand, HEARTS); break; //Corazones
+		case 3: sortFullHandBySuit(fullHand, SPADES); break; //Picas
+		}
+
+		if (fullHand[0].value == 13 && fullHand[4].value == 9) {
+			return 10;
+		}
+		if (fullHand[0].value - fullHand[4].value == 4) {
+			return 9;
+		}
+		else {
+			return 6;
+		}
+	}
+	
+	return 0;
+}
+
+void Poker::sortFullHand(Card* fullHand[7])
+{
+	Card* foo;
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (fullHand[j]->value < fullHand[j + 1]->value) {
+				foo = fullHand[j];
+				fullHand[j] = fullHand[j + 1];
+				fullHand[j + 1] = foo;
+			}
+		}
+	}
+}
+
+void Poker::sortFullHandBySuit(Card fullHand[7], suits suit)
+{
+	Card foo;
+	for (int i = 0; i < 7; i++) {
+		for (int j = 0; j < 6; j++) {
+			if ((fullHand[j].value < fullHand[j + 1].value) || fullHand[j].suit != suit) {
+				foo = fullHand[j];
+				fullHand[j] = fullHand[j + 1];
+				fullHand[j + 1] = foo;
+			}
+		}
 	}
 }
 
