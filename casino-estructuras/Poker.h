@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <locale>
+#include <windows.h>
 #define MINIMUM_BET 100
 
 using namespace std;
@@ -32,11 +33,13 @@ public:
 	void generateCommunityCards();
 	void renderCard(Card);
 	void outputPlayers();
-	void playerMenu(Player);
+	void playerMenu(Player*);
 	int playerJoin();
 	int playerLeave();
+	void nextRound();
 	vector<Player> players;
 private:
+	int turnedCards, round;
 	int lastID;
 	Card communityCards[5];
 	int communityBet, currentBet;

@@ -4,6 +4,8 @@ Poker::Poker()
 {
 	currentBet = MINIMUM_BET;
 	lastID = 0;
+	turnedCards = 0;
+	round = 0;
 }
 
 void Poker::generateCommunityCards()
@@ -14,14 +16,15 @@ void Poker::generateCommunityCards()
 		newCard.suit = static_cast<suits>(rand() % 4 + 1);
 		newCard.value = rand() % 13 + 1;
 		communityCards[i] = newCard;
-		renderCard(communityCards[i]);
-		cout << ",";
+		//renderCard(communityCards[i]);
+		//cout << ",";
 	}
 }
 
 void Poker::renderCard(Card card)
 {
-	char printSuit = ' ', printValue = ' ';
+	char printSuit = ' ';
+	string printValue = "";
 	switch (card.suit) {
 	case CLUBS: printSuit = 'T'; break; //Trebol
 	case DIAMONDS: printSuit = 'D'; break; //Diamantes
@@ -29,12 +32,13 @@ void Poker::renderCard(Card card)
 	case SPADES: printSuit = 'P'; break; //Picas
 	}
 	switch (card.value) {
+	case 10: printValue = "10"; break;
 	case 11: printValue = 'j'; break;
 	case 12: printValue = 'q'; break;
 	case 13: printValue = 'k'; break;
 	default: printValue = char(card.value + 48); break;
 	}
-	cout << printSuit << printValue;
+	cout << "[" << printSuit << printValue << "]";
 }
 
 void Poker::outputPlayers()
@@ -45,18 +49,46 @@ void Poker::outputPlayers()
 	}
 }
 
-void Poker::playerMenu(Player player)
+void Poker::playerMenu(Player* player)
 {
-	if (!player.active) { return; }
+	system("cls");
+	cout << "\n\n";
+	cout << "Acumulado: " << communityBet << "\n\n";
+	cout << "\t";
+	for (int i = 0; i < turnedCards; i++) {
+		renderCard(communityCards[i]);
+		cout << " ";
+	}
+	for (int i = 0; i < (5 - turnedCards); i++) {
+		cout << "[  ]";
+		cout << " ";
+	}
+	cout << endl << "\n\n";
+
+	cout << "Tus Cartas: ";
+	renderCard(player->cards[0]); cout << " ";
+	renderCard(player->cards[1]); cout << endl;
+	cout << "Apuesta de la Mesa: " << currentBet << "\t\t\t";
+	cout << "Tu balance: " << player->balance << endl << endl;
+	if (!player->active) {
+		cout << "~ Ya te haz retirado de la partida ~" << endl;
+		Sleep(3000);
+		return;
+	}
+	if (player->balance == 0) {
+		cout << "= Ya haz metido todo tu balance =" << endl;
+		Sleep(3000);
+		return;
+	}
 	string options[3] = {"RETIRARSE/FOLD", "PASAR/CHECK", "APOSTAR/BET"};
 	int opc;
 	bool betRaised = false;
 
-	if (player.bet < currentBet) {
+	if (player->bet < currentBet) {
 		options[1] = "IGUALAR/CALL";
 		options[2] = "SUBIR/RAISE";
 		betRaised = true;
-		if (currentBet > player.balance) {
+		if (currentBet > player->balance) {
 			options[1] = "ALL-IN";
 			options[2] = "ALL-IN";
 		}
@@ -72,46 +104,63 @@ void Poker::playerMenu(Player player)
 		switch (opc) {
 		case 1:
 			cout << "~ Haz abandonado esta partida ~" << endl;
-			player.active = false;
+			player->active = false;
+			Sleep(2000);
 			return;
 		case 2:
 			if (!betRaised) {
 				cout << "* knock knock *" << endl;
+				Sleep(2000);
 				return;
 			}
 			else {
 				if (options[1] == "ALL-IN") {
-					cout << "ALL-IN !!" << endl;
+					player->bet = player->balance;
+					player->balance -= player->bet;
+					communityBet += player->bet;
+					currentBet = player->bet;
+					cout << "!!! ALL-IN !!!" << endl;
+					Sleep(2000);
 					return;
 				}
 				else {
+					player->bet = currentBet;
+					player->balance -= player->bet;
+					communityBet += player->bet;
 					cout << "$ Haz igualado la apuesta $" << endl;
+					Sleep(2000);
 					return;
 				}
 			}
-			return;
 		case 3:
 			int newBet;
 			do {
-				cout << "CARTAS: ";
-				renderCard(player.cards[0]); renderCard(player.cards[1]); cout << endl;
-				cout << "Apuesta de la Mesa: " << currentBet << endl;
-				cout << "Tu balance: " << player.balance << endl;
 				cout << "-----------------------" << endl;
 				cout << "Tu nueva apuesta -> ";
 				cin >> newBet;
-				if (newBet > player.balance) {
+				if (newBet > player->balance) {
 					cout << "! No cuentas con el balance suficiente !" << endl;
 				}
-				else if (newBet == player.balance) {
-					cout << "ALL-IN" << endl;
+				else if (newBet == player->balance) {
+					player->bet = player->balance;
+					player->balance -= player->bet;
+					communityBet += player->bet;
+					currentBet = player->bet;
+					cout << "!!! ALL-IN !!!" << endl;
+					Sleep(2000);
 					return;
 				}
-				else if (newBet < currentBet) {
+				else if (newBet <= currentBet) {
 					cout << "! La Apuesta de la Mesa es mayor !" << endl;
+					Sleep(2000);
 				}
 				else {
+					player->bet = newBet;
+					player->balance -= player->bet;
+					communityBet += player->bet;
+					currentBet = player->bet;
 					cout << "$ Haz apostado " << newBet << " $" << endl;
+					Sleep(2000);
 					return;
 				}
 			} while (true);
@@ -124,9 +173,21 @@ int Poker::playerJoin()
 	Player newPlayer;
 	cout << "Ingresa el nombre del jugador: ";
 	getline(cin, newPlayer.name);
-	cout << "Ingresa el monto con el que ingresa: ";
-	cin >> newPlayer.balance;
-	cin.ignore();
+	do {
+		cout << "Ingresa el balance con el que ingresa (+ de " << MINIMUM_BET * 10 << "): ";
+		cin >> newPlayer.balance;
+		cin.ignore();
+		if (newPlayer.balance >= MINIMUM_BET * 10) {
+			break;
+		}
+	} while (true);
+	Card newCard;
+	newCard.suit = static_cast<suits>(rand() % 4 + 1);
+	newCard.value = rand() % 13 + 1;
+	newPlayer.cards[0] = newCard;
+	newCard.suit = static_cast<suits>(rand() % 4 + 1);
+	newCard.value = rand() % 13 + 1;
+	newPlayer.cards[1] = newCard;
 	newPlayer.id = ++lastID;
 	players.push_back(newPlayer);
 	return 0;
@@ -147,13 +208,31 @@ int Poker::playerLeave()
 	return 1;
 }
 
+void Poker::nextRound()
+{
+	round++;
+	switch (round) {
+	case 1:
+		turnedCards += 3;
+		break;
+	case 2:
+		turnedCards ++;
+		break;
+	case 3:
+		turnedCards ++;
+		break;
+	}
+}
+
 void main() {
 	setlocale(LC_ALL, "");
 
 	Poker game;
+	game.generateCommunityCards();
 	game.playerJoin();
 	game.outputPlayers();
 	game.players[0].active = true;
-	game.playerMenu(game.players[0]);
-	//game.generateCommunityCards();
+	game.playerMenu(&game.players[0]);
+	game.nextRound();
+	game.playerMenu(&game.players[0]);
 }
