@@ -58,6 +58,17 @@ void Poker::generateCommunityCards()
 	}
 }
 
+int Poker::getActivePlayers()
+{
+	int nPlayers = 0;
+	for (int i = 0; i < players.size(); i++) {
+		if (players[i].active) {
+			nPlayers++;
+		}
+	}
+	return nPlayers;
+}
+
 void Poker::renderCard(Card card)
 {
 	char printSuit = ' ';
@@ -89,24 +100,13 @@ void Poker::outputPlayers()
 
 void Poker::playerMenu(Player* player)
 {
-	system("cls");
-	cout << "\n\n";
-	cout << "Acumulado: " << communityBet << "\n\n";
-	cout << "\t";
-	for (int i = 0; i < turnedCards; i++) {
-		renderCard(communityCards[i]);
-		cout << " ";
-	}
-	for (int i = 0; i < (5 - turnedCards); i++) {
-		cout << "[  ]";
-		cout << " ";
-	}
-	cout << endl << "\n\n";
+	cout << "\n";
+	cout << "Jugador: " << player->name << endl;
 
 	cout << "Tus Cartas: ";
 	renderCard(player->cards[0]); cout << " ";
 	renderCard(player->cards[1]); cout << endl;
-	cout << "Valor de la baraja: " << player->valueOfHand << endl;
+	//cout << "Valor de la baraja: " << player->valueOfHand << endl;
 	cout << "Apuesta de la Mesa: " << currentBet << "\t\t\t";
 	cout << "Tu balance: " << player->balance << endl << endl;
 	if (!player->active) {
@@ -207,6 +207,78 @@ void Poker::playerMenu(Player* player)
 	} while (true);
 }
 
+void Poker::gameMenu(int index)
+{
+	system("cls");
+	if (index + 1 > players.size()) {
+		index = 0;
+	}
+	cout << "Jugadores: " << players.size() << endl;
+	cout << "Siguiente jugador >> " << players[index].name << endl;
+	cout << "Apuesta acumulada: " << communityBet << "\n\n";
+	cout << "\t";
+	for (int i = 0; i < turnedCards; i++) {
+		renderCard(communityCards[i]);
+		cout << " ";
+	}
+	for (int i = 0; i < (5 - turnedCards); i++) {
+		cout << "[  ]";
+		cout << " ";
+	}
+	cout << endl << "\n\n";
+}
+
+void Poker::endOfGameMenu()
+{
+	system("cls");
+	cout << "\n";
+	for (int i = 0; i < 5; i++) {
+		renderCard(communityCards[i]);
+		cout << " ";
+	}
+	cout << "\n\n";
+	cout << "Apuesta acumulada: " << communityBet << endl;
+	cout << "Apuesta de la Mesa: " << currentBet << "\n\n";
+	cout << "Nombre | Apuesta |  Cartas  |  Ranking" << endl;
+	for (int i = 0; i < players.size(); i++) {
+		cout << players[i].name << " - " << players[i].bet << " - ";
+		renderCard(players[i].cards[0]); cout << ",";
+		renderCard(players[i].cards[1]); cout << " - ";
+		printRanking(players[i]);
+		cout << endl;
+	}
+	int winnerIndexes[NUMBER_PLAYERS], winningScore = -1, nWinningPlayers = 0;
+	for (int i = 0; i < NUMBER_PLAYERS; i++) {
+		winnerIndexes[i] = 0;
+	}
+	for (int i = 0; i < players.size(); i++) {
+		if (players[i].active && players[i].valueOfHand > winningScore) {
+			for (int j = 0; j < NUMBER_PLAYERS; j++) {
+				winnerIndexes[j] = 0;
+			}
+			nWinningPlayers = 0;
+			winnerIndexes[nWinningPlayers] = i;
+			nWinningPlayers++;
+		}
+		else if (players[i].active && players[i].valueOfHand == winningScore) {
+			winnerIndexes[nWinningPlayers] = i;
+			nWinningPlayers++;
+		}
+	}
+	for (int i = 0; i < NUMBER_PLAYERS; i++) {
+		if (winnerIndexes[i] == i) {
+			cout << "!!! " << players[i].name << " ha ganado con ";
+			printRanking(players[i]); cout << " !!!" << endl;
+		}
+	}
+	if (nWinningPlayers > 1) {
+		cout << "! Se ha distribuido la apuesta a " << nWinningPlayers << "jugadores !" << endl;
+	}
+	cout << communityBet/ nWinningPlayers << " otorgado";
+	cout << endl;
+	system("pause");
+}
+
 int Poker::playerJoin()
 {
 	Player newPlayer;
@@ -248,8 +320,6 @@ int Poker::playerLeave()
 void Poker::nextRound()
 {
 	round++;
-	turnedCards = 5;
-	return;
 	switch (round) {
 	case 1:
 		turnedCards += 3;
@@ -422,6 +492,7 @@ int Poker::getValueOfHand(Player player)
 		}
 		return valueOfHand;
 	}
+	
 	//2
 	if(twoOAKValue > -1){
 		valueOfHand = 2000;
@@ -439,6 +510,22 @@ int Poker::getValueOfHand(Player player)
 	}
 	
 	return valueOfHand;
+}
+
+void Poker::printRanking(Player player)
+{
+	int handValue = player.valueOfHand;
+	if (handValue < 2000) { cout << "Carta Alta / High Card"; }
+	else if (handValue < 3000) { cout << "Par / Pair"; }
+	else if (handValue < 4000) { cout << "Doble Par / Double Pair"; }
+	else if (handValue < 5000) { cout << "Tercia / Three of a Kind"; }
+	else if (handValue < 6000) { cout << "Escalera / Straight"; }
+	else if (handValue < 7000) { cout << "Color / Flush"; }
+	else if (handValue < 8000) { cout << "Full / Full House"; }
+	else if (handValue < 9000) { cout << "Poker / Poker"; }
+	else if (handValue < 10000) { cout << "Escalera de Color / Straight Flush"; }
+	else if (handValue >= 10000) { cout << "Escalera Real / Royal Flush"; }
+	else { cout << "????"; }
 }
 
 void Poker::sortFullHand(Card fullHand[7])
@@ -473,12 +560,37 @@ void main() {
 	setlocale(LC_ALL, "");
 
 	Poker game;
+	bool debug = false;
+	if (debug) {
+		game.turnedCards = 5;
+		game.generateDeck();
+		game.generateCommunityCards();
+		game.playerJoin();
+		game.outputPlayers();
+		game.players[0].active = true;
+		game.playerMenu(&game.players[0]);
+		game.nextRound();
+		game.playerMenu(&game.players[0]);
+		return;
+	}
+
 	game.generateDeck();
 	game.generateCommunityCards();
-	game.playerJoin();
+	for (int i = 0; i < NUMBER_PLAYERS; i++) {
+		game.playerJoin();
+		game.players[i].active = true;
+	}
 	game.outputPlayers();
-	game.players[0].active = true;
-	game.playerMenu(&game.players[0]);
-	game.nextRound();
-	game.playerMenu(&game.players[0]);
+	system("pause");
+	do {
+		for (int i = 0; i < game.players.size(); i++) {
+			game.gameMenu(i);
+			game.playerMenu(&game.players[i]);
+		}
+		game.nextRound();
+		if (game.round > 3 || game.getActivePlayers() <= 1) {
+			break;
+		}
+	} while (true);
+	game.endOfGameMenu();
 }

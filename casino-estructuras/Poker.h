@@ -8,8 +8,9 @@
 #include <windows.h>
 #include <stack>
 #define MINIMUM_BET 100
-#define AWAIT_TIME 200
+#define AWAIT_TIME 2000
 #define SHUFFLING_TIMES 6
+#define NUMBER_PLAYERS 3
 
 using namespace std;
 
@@ -36,23 +37,27 @@ public:
 	Poker();
 	void generateDeck();
 	void generateCommunityCards();
+	int getActivePlayers();
 	void renderCard(Card);
 	void outputPlayers();
 	void playerMenu(Player*);
+	void gameMenu(int);
+	void endOfGameMenu();
 	int playerJoin();
 	int playerLeave();
 	void nextRound();
 	int getValueOfHand(Player);
+	void printRanking(Player);
 	void sortFullHand(Card[7]);
 	void sortFullHandBySuit(Card [7], enum suits);
 	vector<Player> players;
+	int round;
+	int turnedCards;
 private:
 	int activePlayers;
-	int turnedCards, round;
 	int lastID;
 	Card communityCards[5];
 	int communityBet, currentBet;
 	stack<Card> gameDeck;
-	
 };
 
