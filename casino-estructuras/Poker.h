@@ -6,7 +6,10 @@
 #include <ctime>
 #include <locale>
 #include <windows.h>
+#include <stack>
 #define MINIMUM_BET 100
+#define AWAIT_TIME 200
+#define SHUFFLING_TIMES 6
 
 using namespace std;
 
@@ -23,6 +26,7 @@ struct Player {
 	int balance;
 	int bet = 0;
 	Card cards[2];
+	int valueOfHand = 0;
 	bool active = false;
 };
 
@@ -30,6 +34,7 @@ class Poker
 {
 public:
 	Poker();
+	void generateDeck();
 	void generateCommunityCards();
 	void renderCard(Card);
 	void outputPlayers();
@@ -47,6 +52,7 @@ private:
 	int lastID;
 	Card communityCards[5];
 	int communityBet, currentBet;
+	stack<Card> gameDeck;
 	
 };
 

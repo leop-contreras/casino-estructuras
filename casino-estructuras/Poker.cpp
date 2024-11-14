@@ -9,16 +9,52 @@ Poker::Poker()
 	activePlayers = 0;
 }
 
+void Poker::generateDeck()
+{
+	srand(time(0));
+	Card card;
+	Card generatedGameDeck[52];
+	int rndNumber = 0;
+	int index = 0;
+	for (int j = 0; j < 4; j++) {
+		card.suit = static_cast<suits>(j + 1);
+		for (int i = 0; i < 13; i++) {
+			card.value = i;
+			generatedGameDeck[index++] = card;
+			/*renderCard(generatedGameDeck[index - 1]);
+			cout << ",";*/
+		}
+	}
+	//cout << endl;
+
+	//Shuffle
+	cout << "Shuffling..." << endl;
+	for (int j = 0; j < SHUFFLING_TIMES; j++) {
+		for (int i = 0; i < 52; i++) {
+			rndNumber = (rand() % 51);
+			card = generatedGameDeck[i];
+			renderCard(card);
+			cout << ",";
+			generatedGameDeck[i] = generatedGameDeck[rndNumber];
+			generatedGameDeck[rndNumber] = card;
+		}
+		system("cls");
+	}
+	//Push to game deck
+	for (int i = 0; i < 52; i++) {
+		gameDeck.push(generatedGameDeck[i]);
+		//renderCard(gameDeck.top());
+		//cout << ",";
+	}
+	cout << "Done!" << endl;
+	system("cls");
+}
+
 void Poker::generateCommunityCards()
 {
-	srand(time(0)); // Seed the random number generator with the current time
 	for (int i = 0; i < 5; i++) {
-		Card newCard;
-		newCard.suit = static_cast<suits>(rand() % 4 + 1);
-		newCard.value = rand() % 13 + 1;
-		communityCards[i] = newCard;
-		//renderCard(communityCards[i]);
-		//cout << ",";
+		communityCards[i] = gameDeck.top();
+		gameDeck.pop();
 	}
 }
 
@@ -70,17 +106,17 @@ void Poker::playerMenu(Player* player)
 	cout << "Tus Cartas: ";
 	renderCard(player->cards[0]); cout << " ";
 	renderCard(player->cards[1]); cout << endl;
-	valueOfHand(*player);
+	cout << "Valor de la baraja: " << player->valueOfHand << endl;
 	cout << "Apuesta de la Mesa: " << currentBet << "\t\t\t";
 	cout << "Tu balance: " << player->balance << endl << endl;
 	if (!player->active) {
 		cout << "~ Ya te haz retirado de la partida ~" << endl;
-		Sleep(3000);
+		Sleep(AWAIT_TIME);
 		return;
 	}
 	if (player->balance == 0) {
 		cout << "= Ya haz metido todo tu balance =" << endl;
-		Sleep(3000);
+		Sleep(AWAIT_TIME);
 		return;
 	}
 	string options[3] = {"RETIRARSE/FOLD", "PASAR/CHECK", "APOSTAR/BET"};
@@ -108,12 +144,12 @@ void Poker::playerMenu(Player* player)
 		case 1:
 			cout << "~ Haz abandonado esta partida ~" << endl;
 			player->active = false;
-			Sleep(2000);
+			Sleep(AWAIT_TIME);
 			return;
 		case 2:
 			if (!betRaised) {
 				cout << "* knock knock *" << endl;
-				Sleep(2000);
+				Sleep(AWAIT_TIME);
 				return;
 			}
 			else {
@@ -123,7 +159,7 @@ void Poker::playerMenu(Player* player)
 					communityBet += player->bet;
 					currentBet = player->bet;
 					cout << "!!! ALL-IN !!!" << endl;
-					Sleep(2000);
+					Sleep(AWAIT_TIME);
 					return;
 				}
 				else {
@@ -131,7 +167,7 @@ void Poker::playerMenu(Player* player)
 					player->balance -= player->bet;
 					communityBet += player->bet;
 					cout << "$ Haz igualado la apuesta $" << endl;
-					Sleep(2000);
+					Sleep(AWAIT_TIME);
 					return;
 				}
 			}
@@ -150,12 +186,12 @@ void Poker::playerMenu(Player* player)
 					communityBet += player->bet;
 					currentBet = player->bet;
 					cout << "!!! ALL-IN !!!" << endl;
-					Sleep(2000);
+					Sleep(AWAIT_TIME);
 					return;
 				}
 				else if (newBet <= currentBet) {
 					cout << "! La Apuesta de la Mesa es mayor !" << endl;
-					Sleep(2000);
+					Sleep(AWAIT_TIME);
 				}
 				else {
 					player->bet = newBet;
@@ -163,7 +199,7 @@ void Poker::playerMenu(Player* player)
 					communityBet += player->bet;
 					currentBet = player->bet;
 					cout << "$ Haz apostado " << newBet << " $" << endl;
-					Sleep(2000);
+					Sleep(AWAIT_TIME);
 					return;
 				}
 			} while (true);
@@ -184,14 +220,12 @@ int Poker::playerJoin()
 			break;
 		}
 	} while (true);
-	Card newCard;
-	newCard.suit = static_cast<suits>(rand() % 4 + 1);
-	newCard.value = rand() % 13 + 1;
-	newPlayer.cards[0] = newCard;
-	newCard.suit = static_cast<suits>(rand() % 4 + 1);
-	newCard.value = rand() % 13 + 1;
-	newPlayer.cards[1] = newCard;
+	newPlayer.cards[0] = gameDeck.top();
+	gameDeck.pop();
+	newPlayer.cards[1] = gameDeck.top();
+	gameDeck.pop();
 	newPlayer.id = ++lastID;
+	newPlayer.valueOfHand = getValueOfHand(newPlayer);
 	players.push_back(newPlayer);
 	return 0;
 }
@@ -270,7 +304,7 @@ int Poker::getValueOfHand(Player player)
 		}
 
 		for (int i = 0; i < 6; i++) {
-			if(fullHand[i].value > fullHand[i + 1].value){
+			if(fullHand[i].value == fullHand[i + 1].value + 1){
 				if(inARow < 1){
 					indexARow = i;
 				}
@@ -294,7 +328,16 @@ int Poker::getValueOfHand(Player player)
 		}
 	}
 
+	//Sort
 	sortFullHand(fullHand);
+
+	//SORTED HANDS RENDER - remove
+	/*
+	cout << "Hand sorted: ";
+	for (int i = 0; i < 7; i++) {
+		renderCard(fullHand[i]); cout << ",";
+	}
+	cout << endl;*/
 	
 	//8
 	for (int i = 0; i < 4; i++) {
@@ -307,7 +350,7 @@ int Poker::getValueOfHand(Player player)
 		}
 	}
 	
-	//
+	//Detect threeOAK and twoOAK
 	int threeOAKValue = -1, twoOAKValue = -1;
 	for (int i = 0; i < 5; i++) {
 		if (fullHand[i].value == fullHand[i + 1].value && fullHand[i].value == fullHand[i + 2].value) {
@@ -339,7 +382,7 @@ int Poker::getValueOfHand(Player player)
 	int inARow = 0;
 	int indexARow = -1;
 	for (int i = 0; i < 6; i++) {
-		if (fullHand[i].value > fullHand[i + 1].value) {
+		if (fullHand[i].value == fullHand[i + 1].value+1) {
 			if (inARow < 1) {
 				indexARow = i;
 			}
@@ -380,19 +423,20 @@ int Poker::getValueOfHand(Player player)
 		return valueOfHand;
 	}
 	//2
-	else if(twoOAKValue > -1){
+	if(twoOAKValue > -1){
 		valueOfHand = 2000;
-		valueOfHand += threeOAKValue;
-		return valueOfHand;
-	}
-	else {
-		valueOfHand = 1000;
-		valueOfHand += threeOAKValue;
+		valueOfHand += twoOAKValue;
 		return valueOfHand;
 	}
 
 	//1
-	valueOfHand = fullHand[0].value;
+	valueOfHand = 1000;
+	if (player.cards[0].value > player.cards[1].value) {
+		valueOfHand += player.cards[0].value;
+	}
+	else {
+		valueOfHand += player.cards[1].value;
+	}
 	
 	return valueOfHand;
 }
@@ -429,6 +473,7 @@ void main() {
 	setlocale(LC_ALL, "");
 
 	Poker game;
+	game.generateDeck();
 	game.generateCommunityCards();
 	game.playerJoin();
 	game.outputPlayers();
