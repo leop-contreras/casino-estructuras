@@ -37,11 +37,12 @@ public:
 	int playerJoin();
 	int playerLeave();
 	void nextRound();
-	int valueOfHand(Player);
-	void sortFullHand(Card*[7]);
+	int getValueOfHand(Player);
+	void sortFullHand(Card[7]);
 	void sortFullHandBySuit(Card [7], enum suits);
 	vector<Player> players;
 private:
+	int activePlayers;
 	int turnedCards, round;
 	int lastID;
 	Card communityCards[5];

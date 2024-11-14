@@ -6,6 +6,7 @@ Poker::Poker()
 	lastID = 0;
 	turnedCards = 0;
 	round = 0;
+	activePlayers = 0;
 }
 
 void Poker::generateCommunityCards()
@@ -228,8 +229,9 @@ void Poker::nextRound()
 	}
 }
 
-int Poker::valueOfHand(Player player)
+int Poker::getValueOfHand(Player player)
 {
+	int valueOfHand = 0;
 	Card fullHand[7];
 	//Clubs, Diamonds, Hearts, Spades
 	int nOfSuit[4] = { 0,0,0,0 };
@@ -239,8 +241,6 @@ int Poker::valueOfHand(Player player)
 	for (int i = 0; i < 2; i++) {
 		fullHand[i+5] = player.cards[i];
 	}
-
-	//Sorting
 
 	//Count suit
 	for (int i = 0; i < 7; i++) {
@@ -255,6 +255,8 @@ int Poker::valueOfHand(Player player)
 	//10, 9, y 6
 	if (nOfSuit[0] >= 5 || nOfSuit[1] >= 5 || nOfSuit[2] >= 5 || nOfSuit[3] >= 5) {
 		int indexSuit;
+		int inARow = 0;
+		int indexARow = -1;
 		for (int i = 0; i < 4; i++) {
 			if (nOfSuit[i] >= 5){
 				indexSuit = i;
@@ -267,26 +269,140 @@ int Poker::valueOfHand(Player player)
 		case 3: sortFullHandBySuit(fullHand, SPADES); break; //Picas
 		}
 
-		if (fullHand[0].value == 13 && fullHand[4].value == 9) {
-			return 10;
+		for (int i = 0; i < 6; i++) {
+			if(fullHand[i].value > fullHand[i + 1].value){
+				if(inARow < 1){
+					indexARow = i;
+				}
+				inARow++;
+			}
 		}
-		if (fullHand[0].value - fullHand[4].value == 4) {
-			return 9;
+
+		if (fullHand[0].value == 13 && inARow >= 5) {
+			valueOfHand = 10000;
+			return valueOfHand;
+		}
+		if (inARow >= 5) {
+			valueOfHand = 9000;
+			valueOfHand += fullHand[indexARow].value;
+			return valueOfHand;
 		}
 		else {
-			return 6;
+			valueOfHand = 6000;
+			valueOfHand += fullHand[indexARow].value;
+			return valueOfHand;
+		}
+	}
+
+	sortFullHand(fullHand);
+	
+	//8
+	for (int i = 0; i < 4; i++) {
+		if (fullHand[i].value == fullHand[i + 1].value &&
+			fullHand[i].value == fullHand[i + 2].value &&
+			fullHand[i].value == fullHand[i + 3].value) {
+			valueOfHand = 8000;
+			valueOfHand += fullHand[i].value;
+			return valueOfHand;
 		}
 	}
 	
-	return 0;
+	//
+	int threeOAKValue = -1, twoOAKValue = -1;
+	for (int i = 0; i < 5; i++) {
+		if (fullHand[i].value == fullHand[i + 1].value && fullHand[i].value == fullHand[i + 2].value) {
+			threeOAKValue = fullHand[i].value;
+			break;
+		}
+	}
+	for (int i = 0; i < 6; i++) {
+		if (fullHand[i].value == fullHand[i + 1].value && threeOAKValue != fullHand[i].value) {
+			twoOAKValue = fullHand[i].value;
+			break;
+		}
+	}
+
+	//7
+	if (threeOAKValue > -1 && twoOAKValue > -1) {
+		valueOfHand = 7000;
+		if (threeOAKValue > twoOAKValue) {
+			valueOfHand += 200;
+		}
+		else {
+			valueOfHand += 100;
+		}
+		valueOfHand += threeOAKValue;
+		return valueOfHand;
+	}
+
+	//5
+	int inARow = 0;
+	int indexARow = -1;
+	for (int i = 0; i < 6; i++) {
+		if (fullHand[i].value > fullHand[i + 1].value) {
+			if (inARow < 1) {
+				indexARow = i;
+			}
+			inARow++;
+		}
+	}
+	if (inARow >= 5) {
+		valueOfHand = 5000;
+		valueOfHand += fullHand[indexARow].value;
+		return valueOfHand;
+	}
+
+	//4
+	if (threeOAKValue > -1) {
+		valueOfHand = 4000;
+		valueOfHand += threeOAKValue;
+		return valueOfHand;
+	}
+
+	//3
+	int secondTwoOakValue = -1;
+	for (int i = 0; i < 6; i++) {
+		if (fullHand[i].value == fullHand[i + 1].value && twoOAKValue != fullHand[i].value) {
+			secondTwoOakValue = fullHand[i].value;
+			break;
+		}
+	}
+	if (twoOAKValue > -1 && secondTwoOakValue > -1) {
+		valueOfHand = 3000;
+		if (twoOAKValue > secondTwoOakValue) {
+			valueOfHand += twoOAKValue * 10;
+			valueOfHand += secondTwoOakValue;
+		}
+		else {
+			valueOfHand += secondTwoOakValue * 10;
+			valueOfHand += twoOAKValue;
+		}
+		return valueOfHand;
+	}
+	//2
+	else if(twoOAKValue > -1){
+		valueOfHand = 2000;
+		valueOfHand += threeOAKValue;
+		return valueOfHand;
+	}
+	else {
+		valueOfHand = 1000;
+		valueOfHand += threeOAKValue;
+		return valueOfHand;
+	}
+
+	//1
+	valueOfHand = fullHand[0].value;
+	
+	return valueOfHand;
 }
 
-void Poker::sortFullHand(Card* fullHand[7])
+void Poker::sortFullHand(Card fullHand[7])
 {
-	Card* foo;
+	Card foo;
 	for (int i = 0; i < 7; i++) {
 		for (int j = 0; j < 6; j++) {
-			if (fullHand[j]->value < fullHand[j + 1]->value) {
+			if (fullHand[j].value < fullHand[j + 1].value) {
 				foo = fullHand[j];
 				fullHand[j] = fullHand[j + 1];
 				fullHand[j + 1] = foo;
