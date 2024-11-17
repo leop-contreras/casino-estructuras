@@ -8,13 +8,13 @@
 #include <windows.h>
 #include <stack>
 #define MINIMUM_BET 100
-#define AWAIT_TIME 2000
-#define SHUFFLING_TIMES 6
-#define NUMBER_PLAYERS 3
+#define AWAIT_TIME 2500
+#define SHUFFLING_TIMES 7
+#define NUMBER_PLAYERS 2
 
 using namespace std;
 
-enum suits {CLUBS=1, DIAMONDS, HEARTS, SPADES};
+enum suits { NONE = -1, CLUBS = 1, DIAMONDS, HEARTS, SPADES };
 
 struct Card {
 	enum suits suit;
@@ -39,6 +39,8 @@ public:
 	void generateCommunityCards();
 	int getActivePlayers();
 	void renderCard(Card);
+	void renderBigCard(Card);
+	void renderBigCards(stack<Card>);
 	void outputPlayers();
 	void playerMenu(Player*);
 	void gameMenu(int);
@@ -53,11 +55,47 @@ public:
 	vector<Player> players;
 	int round;
 	int turnedCards;
+	bool playerBetRaisedPassed;
+	bool gameBetRaised;
 private:
+	int betRaisedID;
 	int activePlayers;
 	int lastID;
 	Card communityCards[5];
 	int communityBet, currentBet;
 	stack<Card> gameDeck;
+};
+
+
+string clubs[5] = {
+	"|     __     |",
+	"|   _(  )_   |",
+	"|  (_    _)  |",
+	"|    (__)    |",
+	"|    /__\\    |",
+};
+
+string diamonds[5] = {
+	"|     /\\     |",
+	"|    /  \\    |",
+	"|   (    )   |",
+	"|    \\  /    |",
+	"|     \\/     |",
+};
+
+string hearts[5] = {
+	"|   /\\  /\\   |",
+	"|  /  \\/  \\  |",
+	"|  \\      /  |",
+	"|   \\    /   |",
+	"|    \\  /    |",
+};
+
+string spades[5] = {
+	"|     /\\     |",
+	"|    /  \\    |",
+	"|   (    )   |",
+	"|    _  _    |",
+	"|    /__\\    |",
 };
 
