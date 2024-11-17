@@ -127,11 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Carrera.cpp" />
     <ClCompile Include="Poker.cpp" />
+    <ClCompile Include="RaceMenu.cpp" />
+    <ClCompile Include="Ruta.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Carrera.h" />
     <ClInclude Include="Poker.h" />
+    <ClInclude Include="Ruta.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
