@@ -1,10 +1,4 @@
 #pragma once
-#include <iostream>
-#include <locale.h>
-#include <thread>  // Necesario para usar sleep_for
-#include <chrono>  // Para definir la duración del tiempo
-#include <Windows.h>
-#include <ctime> 
 #include "Ruta.h"
 
 using namespace std;

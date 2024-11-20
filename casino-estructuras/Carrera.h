@@ -1,3 +1,4 @@
+#include "Casino.h"
 #include "Ruta.h"
 using namespace std;
 

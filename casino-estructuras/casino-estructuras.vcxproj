@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="BackJack.cpp" />
     <ClCompile Include="Carrera.cpp" />
+    <ClCompile Include="Casino.cpp" />
     <ClCompile Include="Poker.cpp" />
     <ClCompile Include="RaceMenu.cpp" />
     <ClCompile Include="Ruta.cpp" />
@@ -136,7 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackJack.h" />
-    <ClInclude Include="Ruleta.h" />
+    <ClInclude Include="Casino.h" />
+    <ClInclude Include="RaceMenu.h" />
     <ClInclude Include="Carrera.h" />
     <ClInclude Include="Poker.h" />
     <ClInclude Include="Ruta.h" />

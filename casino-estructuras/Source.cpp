@@ -1,3 +1,4 @@
+#include "Casino.h"
 #include "BackJack.h"
 #include "Carrera.h"
 #include "Poker.h"

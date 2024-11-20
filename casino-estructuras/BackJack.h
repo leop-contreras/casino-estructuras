@@ -1,7 +1,5 @@
 #pragma once
-#include <iostream>
-#include <cstdlib>
-#include <stack>
+#include "Casino.h"
 
 using namespace std;
 

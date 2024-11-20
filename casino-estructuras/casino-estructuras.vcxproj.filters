@@ -33,6 +33,9 @@
     <ClCompile Include="BackJack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Casino.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Poker.h">
@@ -47,7 +50,10 @@
     <ClInclude Include="BackJack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ruleta.h">
+    <ClInclude Include="RaceMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Casino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

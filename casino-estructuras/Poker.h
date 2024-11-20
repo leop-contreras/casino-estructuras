@@ -1,12 +1,5 @@
 #pragma once
-#include <vector>
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include <locale>
-#include <windows.h>
-#include <stack>
+#include "Casino.h"
 #define MINIMUM_BET 100
 #define AWAIT_TIME 2500
 #define SHUFFLING_TIMES 7
