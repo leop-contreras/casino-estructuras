@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackJack.cpp" />
     <ClCompile Include="Carrera.cpp" />
     <ClCompile Include="Poker.cpp" />
     <ClCompile Include="RaceMenu.cpp" />
@@ -134,6 +135,8 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackJack.h" />
+    <ClInclude Include="Ruleta.h" />
     <ClInclude Include="Carrera.h" />
     <ClInclude Include="Poker.h" />
     <ClInclude Include="Ruta.h" />

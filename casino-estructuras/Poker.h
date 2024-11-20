@@ -14,7 +14,7 @@
 
 using namespace std;
 
-enum suits { NONE = -1, CLUBS = 1, DIAMONDS, HEARTS, SPADES };
+extern enum suits { NONE = -1, CLUBS = 1, DIAMONDS, HEARTS, SPADES };
 
 struct Card {
 	enum suits suit;
@@ -52,12 +52,13 @@ public:
 	void printRanking(Player);
 	void sortFullHand(Card[7]);
 	void sortFullHandBySuit(Card [7], enum suits);
+	void play();
+private:
 	vector<Player> players;
 	int round;
 	int turnedCards;
 	bool playerBetRaisedPassed;
 	bool gameBetRaised;
-private:
 	int betRaisedID;
 	int activePlayers;
 	int lastID;
@@ -65,37 +66,3 @@ private:
 	int communityBet, currentBet;
 	stack<Card> gameDeck;
 };
-
-
-string clubs[5] = {
-	"|     __     |",
-	"|   _(  )_   |",
-	"|  (_    _)  |",
-	"|    (__)    |",
-	"|    /__\\    |",
-};
-
-string diamonds[5] = {
-	"|     /\\     |",
-	"|    /  \\    |",
-	"|   (    )   |",
-	"|    \\  /    |",
-	"|     \\/     |",
-};
-
-string hearts[5] = {
-	"|   /\\  /\\   |",
-	"|  /  \\/  \\  |",
-	"|  \\      /  |",
-	"|   \\    /   |",
-	"|    \\  /    |",
-};
-
-string spades[5] = {
-	"|     /\\     |",
-	"|    /  \\    |",
-	"|   (    )   |",
-	"|    _  _    |",
-	"|    /__\\    |",
-};
-

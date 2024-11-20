@@ -6,7 +6,6 @@ BackJack::BackJack()
 }
 
 
-
 void BackJack::inicializarBaraja()
 {
     string palos[] = { "Corazones", "Diamantes", "Tréboles", "Picas" };
@@ -23,7 +22,7 @@ void BackJack::inicializarBaraja()
     }
 }
 
-int generarIndiceAleatorio(bool usados[]) {
+int BackJack::generarIndiceAleatorio(bool usados[]) {
     int indice;
     do {
         indice = rand() % 52;
@@ -82,6 +81,7 @@ int BackJack::Jugar(int apuesta)
         JUGADOR.push(carta);
         cout << "\nCarta del Jugador:: " << carta.nombre << endl;
         cout << "\nDeseas otra carta?\n1)Si\n2)NO\nSelecciona una opcion:: ";
+        cin >> opc;
     } while (opc == 2);
 
     if (Puntaje(JUGADOR) == -1) {

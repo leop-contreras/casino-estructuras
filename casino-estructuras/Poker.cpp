@@ -1,5 +1,37 @@
 #include "Poker.h"
 
+string clubs[5] = {
+	"|     __     |",
+	"|   _(  )_   |",
+	"|  (_    _)  |",
+	"|    (__)    |",
+	"|    /__\\    |",
+};
+
+string diamonds[5] = {
+	"|     /\\     |",
+	"|    /  \\    |",
+	"|   (    )   |",
+	"|    \\  /    |",
+	"|     \\/     |",
+};
+
+string hearts[5] = {
+	"|   /\\  /\\   |",
+	"|  /  \\/  \\  |",
+	"|  \\      /  |",
+	"|   \\    /   |",
+	"|    \\  /    |",
+};
+
+string spades[5] = {
+	"|     /\\     |",
+	"|    /  \\    |",
+	"|   (    )   |",
+	"|    _  _    |",
+	"|    /__\\    |",
+};
+
 Poker::Poker()
 {
 	currentBet = MINIMUM_BET;
@@ -743,6 +775,32 @@ void Poker::sortFullHandBySuit(Card fullHand[7], suits suit)
 	}
 }
 
+void Poker::play()
+{
+	generateDeck();
+	generateCommunityCards();
+	for (int i = 0; i < NUMBER_PLAYERS; i++) {
+		playerJoin();
+		players[i].active = true;
+	}
+	outputPlayers();
+	system("pause");
+	do {
+		do {
+			for (int i = 0; i < players.size(); i++) {
+				gameMenu(i);
+				playerMenu(&players[i]);
+				if (gameBetRaised && playerBetRaisedPassed) break;
+			}
+		} while (gameBetRaised && !playerBetRaisedPassed);
+		nextRound();
+		if (round > 3 || getActivePlayers() <= 1) {
+			break;
+		}
+	} while (true);
+	endOfGameMenu();
+}
+/*
 void main() {
 	setlocale(LC_ALL, "");
 
@@ -771,3 +829,9 @@ void main() {
 	} while (true);
 	game.endOfGameMenu();
 }
+*/
+
+
+
+
+

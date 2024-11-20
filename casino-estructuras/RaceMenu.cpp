@@ -3,7 +3,7 @@
 
 using namespace std;
 
-float Apostar(float saldo)
+float ApostarMenu(float saldo)
 {
 	system("cls");
 	int noCaballos, elegido;
@@ -154,7 +154,7 @@ float Apostar(float saldo)
 	return saldo;
 }
 
-int main()
+/*int main()
 {
 	setlocale(LC_ALL, "");
 	int opc, velocidad, longitud, pasos;
@@ -191,5 +191,5 @@ int main()
 			break;
 		}
 	} while (opc != 3);
-}
+}*/
 
