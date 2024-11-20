@@ -799,6 +799,7 @@ void Poker::play()
 		}
 	} while (true);
 	endOfGameMenu();
+	system("cls");
 }
 /*
 void main() {

@@ -169,6 +169,7 @@ void main() {
 		switch (opc) {
 		case 1:
 			blackJack.Jugar(500);
+			cout << endl;
 			break;
 		case 2:
 			poker.play();
