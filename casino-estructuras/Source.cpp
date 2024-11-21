@@ -161,7 +161,7 @@ void main() {
 	Poker poker;
 	BackJack blackJack;
 
-	int opc;
+	int opc, apuesta;
 	do {
 		cout << "\t$%$ CASINO ELM $%$" << endl;
 		cout << "1.Blackjack  2.Poker  3.Carrera  4.Salir: ";
@@ -169,7 +169,10 @@ void main() {
 		cin.ignore();
 		switch (opc) {
 		case 1:
-			blackJack.Jugar(500);
+			cout << "Cuanto quieres apostar?  ";
+			cin >> apuesta;
+			
+			apuesta = blackJack.Jugar(apuesta);
 			cout << endl;
 			break;
 		case 2:

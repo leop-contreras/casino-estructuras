@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "Ruta.h"
 
 using namespace std;
