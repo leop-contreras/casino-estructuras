@@ -1,6 +1,6 @@
 #include "Casino.h"
 
-
+/*
 Casino::Casino()
 {
 
@@ -19,7 +19,7 @@ int Casino::indiceJugador(Jugador)
 	/*for (int i = 0; i < jugadores.size()) {
 		if()
 	}
-	return 0;*/
+	return 0;
 }
 
 string Casino::generarID()
@@ -29,5 +29,5 @@ string Casino::generarID()
 		chId[(rand() % 25) + 97];
 	}
 
-    return chId.str();*/
-}
+    return chId.str();
+}*/
