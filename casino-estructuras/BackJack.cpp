@@ -23,6 +23,7 @@ void BackJack::inicializarBaraja()
 }
 
 int BackJack::generarIndiceAleatorio(bool usados[]) {
+    srand(time(0));
     int indice;
     do {
         indice = rand() % 52;
@@ -46,65 +47,79 @@ int BackJack::Puntaje(stack<Carta> pila)
 {
     int puntaje = 0, as = 0;
     Carta carta;
-    while (puntaje > 21)
-    {
-        if (pila.empty()) {
-            carta = pila.top();
-            pila.pop();
-            if (carta.valor == 11) as++;
-            if ((puntaje + carta.valor) > 21 && as > 0) {
-                carta.valor = 1;
-            }
-            puntaje += carta.valor;
-        }
-        else
-        {
-            return puntaje;
+
+    while (!pila.empty()) {
+        carta = pila.top();
+        pila.pop();
+
+        if (carta.valor == 11) as++;  
+        puntaje += carta.valor;
+
+        
+        while (puntaje > 21 && as > 0) {
+            puntaje -= 10;  
+            as--;  
         }
     }
-    return -1;
-}
 
+    return puntaje; 
+}
 int BackJack::Jugar(int apuesta)
 {
     Carta carta;
+    while(!JUGADOR.empty()){
+        JUGADOR.pop();
+    }
+    while (!CASA.empty()) {
+        CASA.pop();
+    }
+    while (!BARAJA.empty()) {
+        BARAJA.pop();
+    }
     int opc;
     
+    barajear();
+    
+
     carta = BARAJA.top();
     BARAJA.pop();
     CASA.push(carta);
-    cout << "\nCarta de la casa:: " << carta.nombre;
+    cout << "\nCarta de la casa:: " << carta.valor << " de " << carta.nombre;
     do
     {
         carta = BARAJA.top();
         BARAJA.pop();
         JUGADOR.push(carta);
-        cout << "\nCarta del Jugador:: " << carta.nombre << endl;
+        cout << "\nCarta del Jugador:: " << carta.valor << " de " << carta.nombre << endl;
         cout << "\nDeseas otra carta?\n1)Si\n2)NO\nSelecciona una opcion:: ";
         cin >> opc;
-    } while (opc == 2);
+    } while (opc != 2);
 
     if (Puntaje(JUGADOR) == -1) {
-        cout << "Perdiste";
+        cout << "\tPerdiste (1)";
+        
         return 0;
     }
-    while (Puntaje(JUGADOR) <= Puntaje(CASA)) {
+    do{
         carta = BARAJA.top();
         BARAJA.pop();
         CASA.push(carta);
-        cout << "\nCarta de la casa:: " << carta.nombre;
-    }
+        cout << "\nCarta de la casa:: " << carta.valor << " de " << carta.nombre;
+    } while (Puntaje(JUGADOR) > Puntaje(CASA));
     if (Puntaje(CASA) == -1) {
-        cout << "La casa perdio";
+        cout << "\tLa casa perdio";
+        
         return (apuesta*2);
     }
 
     if (Puntaje(JUGADOR) == Puntaje(CASA)) {
-        cout << "Empate";
+        cout << "\tEmpate";
+        
         return apuesta;
     }
 
-    cout << "La casa gano";
+    cout << "\tLa casa gano";
+    
     return 0;
 }
 

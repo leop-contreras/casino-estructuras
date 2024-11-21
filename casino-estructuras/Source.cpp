@@ -164,7 +164,7 @@ void main() {
 
 	vector<Jugador> jugadoresActivos;
 
-	int opc;
+	int opc, apuesta;
 	do {
 		system("cls");
 		cout << "\t\t$$$$ CASINO ELM $$$$" << "\n\n";
@@ -181,8 +181,11 @@ void main() {
 			casino.salidaJugador();
 			break;
 		case 3:
-			blackJack.Jugar(500);
+			cout << "Cuanto quieres apostar?  ";
+			cin >> apuesta;
+			apuesta = blackJack.Jugar(500);
 			cout << endl;
+			system("pause");
 			break;
 		case 4:
 			casino.seleccionJugadores(&jugadoresActivos,POKER_MAX_NUMBER_PLAYERS);
