@@ -23,7 +23,7 @@ class Carrera
 {
 public:
 	Carrera(int);
-	void AñadirCarril();
+	void AnadirCarril();
 	void MostrarCaballos();
 	float CalcularApuesta(float, int, int);
 	float MostrarCarrera();
@@ -54,4 +54,5 @@ private:
 	bool nombresUsados[20] = { false };
 	float ganancia;
 	float perdida;
+	float total;
 };

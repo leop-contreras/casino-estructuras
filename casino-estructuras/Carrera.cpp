@@ -12,12 +12,13 @@ Carrera::Carrera(int Caballos)
     caballos = 0;
     ganancia = 0;
     perdida = 0;
+    total = 0;
 
-    AñadirCarril();
+    AnadirCarril();
 
     for (int z = 0; z < Caballos; z++)
     {
-        AñadirCarril();
+        AnadirCarril();
     }
 
     cout << "\n--------------Se añadieron los caballos correctamente--------------" << endl;
@@ -120,11 +121,9 @@ float Carrera::MostrarCarrera()
 
     }
 
-    resultado = ganancia;
-
     cout << endl;
 
-    return resultado;
+    return total;
 }
 
 void Carrera::BorrarUltimaLinea()
@@ -196,8 +195,9 @@ void Carrera::RecorrerApuestas()
         }
         else
         {
-            cout << "\n\tGANASTE! MONTO-> $" << ganado - apuestas[y]->monto << "\n\n\SALDO FINAL -> $" << apuestas[y]->monto + ganado << "." << endl;
-            ganancia += apuestas[y]->monto + (ganado - apuestas[y]->monto);
+            ganancia += ganado - apuestas[y]->monto;
+            total += ganancia + apuestas[y]->monto;
+            cout << "\n\tGANASTE! MONTO-> $" << ganancia << "\n\n\SALDO FINAL -> $" << total << "." << endl;
         }
         cout << "\n\n--------------------------------" << endl;
     }
@@ -223,7 +223,7 @@ float Carrera::PotenciadorCarril(int carril)
     return potenciador;
 }
 
-void Carrera::AñadirCarril()
+void Carrera::AnadirCarril()
 {
     caballos++;
     string nombre = CrearNombre();
@@ -370,8 +370,6 @@ float Carrera::CalcularApuesta(float monto, int apostado, int caso)
             cout << "\n\tMULTIPLICADOR DE -WIN- -> 1.3x." << endl;
 
             cout << "\n\tMULTIPLICADOR TOTAL -> " << multiplicador << "x." << endl;
-
-            cout << "RESULTADO? -> " << resultado << endl;
 
         }
         break;
