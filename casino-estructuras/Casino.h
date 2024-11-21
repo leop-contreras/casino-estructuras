@@ -1,5 +1,4 @@
 #pragma once
-#include <list>
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -15,7 +14,7 @@ using namespace std;
 
 struct Jugador {
 	string id;
-	string name;
+	string nombre;
 	int balance;
 };
 
@@ -24,11 +23,13 @@ class Casino
 public:
 	Casino();
 	void entradaJugador();
-	void salidaJugador();
+	int salidaJugador();
 	int modificarBalance(Jugador, int);
 	int indiceJugador(Jugador);
+	void seleccionJugadores(vector<Jugador>*, int nJugadores = -1);
+	void mostrarJugadores();
 	string generarID();
 private:
-	list<Jugador> jugadores;
+	vector<Jugador> jugadores;
 };
 

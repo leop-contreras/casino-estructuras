@@ -158,27 +158,43 @@ float Apostar(float saldo)
 
 void main() {
 	setlocale(LC_ALL, "");
+	Casino casino;
 	Poker poker;
 	BackJack blackJack;
 
+	vector<Jugador> jugadoresActivos;
+
 	int opc;
 	do {
-		cout << "\t$%$ CASINO ELM $%$" << endl;
-		cout << "1.Blackjack  2.Poker  3.Carrera  4.Salir: ";
+		system("cls");
+		cout << "\t\t$$$$ CASINO ELM $$$$" << "\n\n";
+		casino.mostrarJugadores();
+		cout << "\n";
+		cout << "1.Entrada jugador  2.Salida jugador  3.Blackjack  4.Poker  5.Carrera  6.Salir: ";
 		cin >> opc;
 		cin.ignore();
 		switch (opc) {
 		case 1:
+			casino.entradaJugador();
+			break;
+		case 2:
+			casino.salidaJugador();
+			break;
+		case 3:
 			blackJack.Jugar(500);
 			cout << endl;
 			break;
-		case 2:
-			poker.play();
+		case 4:
+			casino.seleccionJugadores(&jugadoresActivos,POKER_MAX_NUMBER_PLAYERS);
+			if(jugadoresActivos.size() < 1) break;
+			system("cls");
+			poker = Poker();
+			poker.play(&jugadoresActivos);
 			break;
-		case 3:
+		case 5:
 			Apostar(1000);
 			break;
 		}
-	} while (opc != 4);
+	} while (opc != 6);
 
 }

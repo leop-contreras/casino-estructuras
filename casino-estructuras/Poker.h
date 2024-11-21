@@ -1,9 +1,9 @@
 #pragma once
 #include "Casino.h"
 #define MINIMUM_BET 100
-#define AWAIT_TIME 2500
+#define AWAIT_TIME 500
 #define SHUFFLING_TIMES 7
-#define NUMBER_PLAYERS 2
+#define POKER_MAX_NUMBER_PLAYERS 5
 
 using namespace std;
 
@@ -15,7 +15,7 @@ struct Card {
 };
 
 struct Player {
-	int id;
+	string id;
 	string name;
 	int balance;
 	int bet = 0;
@@ -38,21 +38,22 @@ public:
 	void playerMenu(Player*);
 	void gameMenu(int);
 	void endOfGameMenu();
-	int playerJoin();
-	int playerLeave();
+	int playerJoin(Jugador*);
+	void playerAssignCards(Player*);
+	void playersLeave(vector<Jugador>*);
 	void nextRound();
 	int getValueOfHand(Player);
 	void printRanking(Player);
 	void sortFullHand(Card[7]);
 	void sortFullHandBySuit(Card [7], enum suits);
-	void play();
+	void play(vector<Jugador>*);
 private:
 	vector<Player> players;
 	int round;
 	int turnedCards;
 	bool playerBetRaisedPassed;
 	bool gameBetRaised;
-	int betRaisedID;
+	string betRaisedID;
 	int activePlayers;
 	int lastID;
 	Card communityCards[5];

@@ -34,13 +34,14 @@ string spades[5] = {
 
 Poker::Poker()
 {
+	communityBet = currentBet = 0;
 	currentBet = MINIMUM_BET;
 	lastID = 0;
 	turnedCards = 0;
 	round = 0;
 	activePlayers = 0;
 	gameBetRaised = false;
-	betRaisedID = -1;
+	betRaisedID = " ";
 	playerBetRaisedPassed = true;
 }
 
@@ -279,7 +280,7 @@ void Poker::playerMenu(Player* player)
 	renderBigCards(tempCards);
 	//cout << "Valor de la baraja: " << player->valueOfHand << endl;
 	cout << "Apuesta de la Mesa: " << currentBet;
-	if (betRaisedID > -1) cout << " < ¡Alzada!";
+	if (betRaisedID != " ") cout << " < ¡Alzada!";
 	cout << "\t\t";
 	cout << "Tu apuesta: " << player->bet << "\t\t";
 	cout << "Tu balance: " << player->balance << endl << endl;
@@ -460,14 +461,15 @@ void Poker::endOfGameMenu()
 		cout << "~-----------------~" << endl << "\n";
 	}
 
-	int winnerIndexes[NUMBER_PLAYERS], winningScore = -1, nWinningPlayers = 0;
-	for (int i = 0; i < NUMBER_PLAYERS; i++) {
-		winnerIndexes[i] = -1;
+	vector<int> winnerIndexes;
+	int winningScore = -1, nWinningPlayers = 0;
+	for (int i = 0; i < players.size(); i++) {
+		winnerIndexes.push_back(-1);
 	}
 	for (int i = 0; i < players.size(); i++) {
 		if (players[i].active && players[i].valueOfHand > winningScore) {
 			winningScore = players[i].valueOfHand;
-			for (int j = 0; j < NUMBER_PLAYERS; j++) {
+			for (int j = 0; j < players.size(); j++) {
 				winnerIndexes[j] = -1;
 			}
 			winnerIndexes[0] = i;
@@ -486,11 +488,12 @@ void Poker::endOfGameMenu()
 	else {
 		cout << "~-----GANADOR-----~" << endl;;
 	}
-	for (int j = 0; j < NUMBER_PLAYERS; j++) {
-		for (int i = 0; i < NUMBER_PLAYERS; i++) {
+	for (int j = 0; j < players.size(); j++) {
+		for (int i = 0; i < players.size(); i++) {
 			if (winnerIndexes[j] == i) {
 				cout << "!!! " << players[i].name << " ha ganado con ";
 				printRanking(players[i]); cout << " !!!" << endl;
+				players[i].balance += static_cast<int>(communityBet / nWinningPlayers);
 			}
 		}
 	}
@@ -498,55 +501,58 @@ void Poker::endOfGameMenu()
 	if (nWinningPlayers > 1) {
 		cout << "! Se ha distribuido la apuesta a " << nWinningPlayers << " jugadores !" << endl;
 	}
-	cout << "> " << communityBet / nWinningPlayers << " otorgado <";
+	cout << "> " << static_cast<int>(communityBet / nWinningPlayers) << " otorgado <";
 	cout << endl;
 	cout << "~-----------------~" << endl;
-	system("pause");
+	return;
 }
 
-int Poker::playerJoin()
+int Poker::playerJoin(Jugador* jugador)
 {
 	Player newPlayer;
-	cout << "Ingresa el nombre del jugador: ";
-	getline(cin, newPlayer.name);
+	newPlayer.name = jugador->nombre;
+	newPlayer.id = jugador->id;
 	do {
-		cout << "Ingresa el balance con el que ingresa (+ de " << MINIMUM_BET * 10 << "): ";
+		cout << "Ingresa el balance con el que ingresa " << jugador->nombre << "." << endl;
+		cout << "[ " << MINIMUM_BET * 10 << " - " << jugador->balance << " ]: ";
 		cin >> newPlayer.balance;
 		cin.ignore();
-		if (newPlayer.balance >= MINIMUM_BET * 10) {
+		if (newPlayer.balance >= MINIMUM_BET * 10 && newPlayer.balance <= jugador->balance) {
 			break;
 		}
 	} while (true);
-	newPlayer.cards[0] = gameDeck.top();
-	gameDeck.pop();
-	newPlayer.cards[1] = gameDeck.top();
-	gameDeck.pop();
-	newPlayer.id = ++lastID;
-	newPlayer.valueOfHand = getValueOfHand(newPlayer);
+	jugador->balance -= newPlayer.balance;
+	newPlayer.active = true;
 	players.push_back(newPlayer);
 	return 0;
 }
 
-int Poker::playerLeave()
+void Poker::playerAssignCards(Player* player)
 {
-	int deleteID;
-	cout << "ID del Jugador: ";
-	cin >> deleteID;
-	for (int i = 0; i < players.size(); i++) {
-		if (players[i].id == deleteID) {
-			cout << "Removed " << players[i].name << " succesfully." << endl;
-			players.erase(players.begin() + i);
-			return 0;
+	player->cards[0] = gameDeck.top();
+	gameDeck.pop();
+	player->cards[1] = gameDeck.top();
+	gameDeck.pop();
+	player->valueOfHand = getValueOfHand(*player);
+}
+
+void Poker::playersLeave(vector<Jugador>* jugadores) {
+	for (int i = 0; i < jugadores->size(); i++) {
+		for (int j = 0; j < players.size(); j++) {
+			if (players[j].id == (*jugadores)[i].id) {
+				(*jugadores)[i].balance += players[j].balance;
+				break;
+			}
 		}
 	}
-	return 1;
+	players.clear();
 }
 
 void Poker::nextRound()
 {
 	round++;
 	gameBetRaised = false;
-	betRaisedID = -1;
+	betRaisedID = " ";
 	switch (round) {
 	case 1:
 		turnedCards += 3;
@@ -775,64 +781,42 @@ void Poker::sortFullHandBySuit(Card fullHand[7], suits suit)
 	}
 }
 
-void Poker::play()
+void Poker::play(vector<Jugador>* jugadores)
 {
-	generateDeck();
-	generateCommunityCards();
-	for (int i = 0; i < NUMBER_PLAYERS; i++) {
-		playerJoin();
-		players[i].active = true;
+	int playingValue = 1;
+
+	for (int i = 0; i < jugadores->size(); i++) {
+		playerJoin(&(*jugadores)[i]);
 	}
-	outputPlayers();
-	system("pause");
+
+	// !! Reglas de juego
+
 	do {
-		do {
-			for (int i = 0; i < players.size(); i++) {
-				gameMenu(i);
-				playerMenu(&players[i]);
-				if (gameBetRaised && playerBetRaisedPassed) break;
-			}
-		} while (gameBetRaised && !playerBetRaisedPassed);
-		nextRound();
-		if (round > 3 || getActivePlayers() <= 1) {
-			break;
+		generateDeck();
+		generateCommunityCards();
+		for (int i = 0; i < players.size(); i++) {
+			playerAssignCards(&players[i]);
 		}
-	} while (true);
-	endOfGameMenu();
-	system("cls");
-}
-/*
-void main() {
-	setlocale(LC_ALL, "");
-
-	Poker game;
-
-	game.generateDeck();
-	game.generateCommunityCards();
-	for (int i = 0; i < NUMBER_PLAYERS; i++) {
-		game.playerJoin();
-		game.players[i].active = true;
-	}
-	game.outputPlayers();
-	system("pause");
-	do {
+		outputPlayers();
+		system("pause");
 		do {
-			for (int i = 0; i < game.players.size(); i++) {
-				game.gameMenu(i);
-				game.playerMenu(&game.players[i]);
-				if (game.gameBetRaised && game.playerBetRaisedPassed) break;
+			do {
+				for (int i = 0; i < players.size(); i++) {
+					gameMenu(i);
+					playerMenu(&players[i]);
+					if (gameBetRaised && playerBetRaisedPassed) break;
+				}
+			} while (gameBetRaised && !playerBetRaisedPassed);
+			nextRound();
+			if (round > 3 || getActivePlayers() <= 1) {
+				break;
 			}
-		} while (game.gameBetRaised && !game.playerBetRaisedPassed);
-		game.nextRound();
-		if (game.round > 3 || game.getActivePlayers() <= 1) {
-			break;
-		}
-	} while (true);
-	game.endOfGameMenu();
+		} while (true);
+		endOfGameMenu();
+		cout << "¿Desean jugar nuevamente? (1.Si): ";
+		cin >> playingValue;
+		system("cls");
+	} while (playingValue == 1);
+
+	playersLeave(jugadores);
 }
-*/
-
-
-
-
-

@@ -1,5 +1,5 @@
 #pragma once
-#include "Ruta.h"
+#include "Casino.h"
 
 using namespace std;
 
