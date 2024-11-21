@@ -18,7 +18,7 @@ void main() {
 		cout << "\t\t$$$$ CASINO ELM $$$$" << "\n\n";
 		casino.mostrarJugadores();
 		cout << "\n";
-		cout << "1.Entrada jugador  2.Salida jugador  3.Carrera  4.Poker  5.Blackjack  6.Salir: ";
+		cout << "1.Entrada jugador  2.Salida jugador  3.Carrera  4.Blackjack  5.Poker  6.Salir: ";
 		cin >> opc;
 		cin.ignore();
 		switch (opc) {
@@ -40,15 +40,7 @@ void main() {
 			cout << endl;
 			casino.vaciarJugadoresActivos();
 			break;
-		case 4: //Poker
-			casino.seleccionJugadores(POKER_MAX_NUMBER_PLAYERS);
-			if(casino.jugadoresActivos.size() < 1) break;
-			system("cls");
-			poker = Poker();
-			poker.play(&casino.jugadoresActivos);
-			casino.vaciarJugadoresActivos();
-			break;
-		case 5: //Blackjack
+		case 4: //Blackjack
 			casino.seleccionJugadores(1);
 			if (casino.jugadoresActivos.size() < 1) break;
 			system("cls");
@@ -60,6 +52,14 @@ void main() {
 			cout << endl;
 			casino.vaciarJugadoresActivos();
 			system("pause");
+			break;
+		case 5: //Poker
+			casino.seleccionJugadores(POKER_MAX_NUMBER_PLAYERS);
+			if (casino.jugadoresActivos.size() < 1) break;
+			system("cls");
+			poker = Poker();
+			poker.play(&casino.jugadoresActivos);
+			casino.vaciarJugadoresActivos();
 			break;
 		}
 	} while (opc != 6);

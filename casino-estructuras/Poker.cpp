@@ -36,7 +36,6 @@ Poker::Poker()
 {
 	communityBet = currentBet = 0;
 	currentBet = MINIMUM_BET;
-	lastID = 0;
 	turnedCards = 0;
 	round = 0;
 	activePlayers = 0;
@@ -783,7 +782,7 @@ void Poker::sortFullHandBySuit(Card fullHand[7], suits suit)
 
 void Poker::play(vector<Jugador>* jugadores)
 {
-	int playingValue = 1;
+	int playingValue = 2;
 
 	for (int i = 0; i < jugadores->size(); i++) {
 		playerJoin(&(*jugadores)[i]);
@@ -813,8 +812,9 @@ void Poker::play(vector<Jugador>* jugadores)
 			}
 		} while (true);
 		endOfGameMenu();
-		cout << "¿Desean jugar nuevamente? (1.Si): ";
-		cin >> playingValue;
+		/*cout << "¿Desean jugar nuevamente? (1.Si): ";
+		cin >> playingValue;*/
+		system("pause");
 		system("cls");
 	} while (playingValue == 1);
 

@@ -28,35 +28,34 @@ class Poker
 {
 public:
 	Poker();
-	void generateDeck();
-	void generateCommunityCards();
-	int getActivePlayers();
-	void renderCard(Card);
-	void renderBigCard(Card);
-	void renderBigCards(stack<Card>);
-	void outputPlayers();
-	void playerMenu(Player*);
-	void gameMenu(int);
-	void endOfGameMenu();
-	int playerJoin(Jugador*);
-	void playerAssignCards(Player*);
-	void playersLeave(vector<Jugador>*);
-	void nextRound();
-	int getValueOfHand(Player);
-	void printRanking(Player);
-	void sortFullHand(Card[7]);
-	void sortFullHandBySuit(Card [7], enum suits);
-	void play(vector<Jugador>*);
+	void generateDeck(); //Genera la baraja del juego
+	void generateCommunityCards(); //Genera las cartas del centro de la mesa
+	int getActivePlayers(); //Obtiene los jugadores que aun pueden actuar
+	void renderCard(Card); //Imprime la carta en el formato [S1]
+	void renderBigCard(Card); //Imprime la carta con ascii art
+	void renderBigCards(stack<Card>); //Imprime varias cartas con ascii art una alado de otra
+	void outputPlayers(); //Muestra los jugadores dentro de Poker
+	void playerMenu(Player*); //Seccion del menu de jugador
+	void gameMenu(int); //Seccion del menu general
+	void endOfGameMenu(); //Funcion para final de juego
+	int playerJoin(Jugador*); //Vincula a Jugador con Player
+	void playerAssignCards(Player*); //Asigna las 2 cartas del jugador
+	void playersLeave(vector<Jugador>*); //Vacia todos los Players y vacia balances en Jugador
+	void nextRound(); //Siguiente ronda
+	int getValueOfHand(Player); //Obtener el valor de la baraja (las 7 cartas) conforme a las reglas de Poker
+	void printRanking(Player); //Obtiene el ranking (nombre de la mano)
+	void sortFullHand(Card[7]); //Acomoda la baraja de 7 cartas por valor
+	void sortFullHandBySuit(Card [7], enum suits); //Acomoda la baraja de 7 cartas por palo
+	void play(vector<Jugador>*); //Metodo para jugar
 private:
-	vector<Player> players;
-	int round;
-	int turnedCards;
-	bool playerBetRaisedPassed;
-	bool gameBetRaised;
-	string betRaisedID;
-	int activePlayers;
-	int lastID;
-	Card communityCards[5];
-	int communityBet, currentBet;
-	stack<Card> gameDeck;
+	vector<Player> players; //Players (registro especifico de jugador para Poker)
+	int round; //Numero de round
+	int turnedCards; //Numero de cartas del centro volteadas
+	bool playerBetRaisedPassed; //Si el jugador que elevo la apuesta ya paso
+	bool gameBetRaised; //Si la apuesta se ha subido
+	string betRaisedID; //ID del jugador que subio la apuesta
+	int activePlayers; //Numero de jugadores que aun pueden actuar
+	Card communityCards[5]; //Cartas del centro de la mesa
+	int communityBet, currentBet; //Apuesta acumulada y apuesta actual
+	stack<Card> gameDeck; //Baraja del juego (las 52 cartas)
 };
