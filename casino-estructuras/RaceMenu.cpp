@@ -144,9 +144,7 @@ float RaceMenu::Apostar(float saldo)
 
 	resultado = carrera.MostrarCarrera();
 
-	nuevosaldo = saldo + resultado;
-
-	cout << "SALDO FINAL -> $" << nuevosaldo << "." << endl;
+	cout << "SALDO FINAL -> " << resultado + saldo<< "." << endl;
 
 	cout << "\nPRESIONE CUALQUIER TECLA PARA CONTINUAR." << endl;
 
@@ -154,7 +152,7 @@ float RaceMenu::Apostar(float saldo)
 
 	system("cls");
 
-	return nuevosaldo;
+	return resultado + saldo;
 }
 
 RaceMenu::RaceMenu()
