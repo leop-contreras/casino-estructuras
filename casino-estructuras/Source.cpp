@@ -36,7 +36,7 @@ void main() {
 			cin >> apuesta;
 			cin.ignore();
 			casino.jugadoresActivos[0].balance -= apuesta;
-			casino.jugadoresActivos[0].balance += carrera.Apostar(1000);;
+			casino.jugadoresActivos[0].balance += carrera.Apostar(apuesta);
 			cout << endl;
 			casino.vaciarJugadoresActivos();
 			break;

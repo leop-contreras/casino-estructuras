@@ -23,7 +23,7 @@ class Carrera
 {
 public:
 	Carrera(int);
-	void AñadirCarril();
+	void AnadirCarril();
 	void MostrarCaballos();
 	float CalcularApuesta(float, int, int);
 	float MostrarCarrera();

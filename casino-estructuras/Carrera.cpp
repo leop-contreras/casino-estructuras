@@ -1,7 +1,7 @@
 #include "Carrera.h"
 
 const char* nombres[] = {
-    "Rlmpgo", "Trmnt", "Trno", "Vnto", "√Ågla", "Dstllo", "Rayo", "Cntlla",
+    "Rlmpgo", "Trmnt", "Trno", "Vnto", "¡gla", "Dstllo", "Rayo", "Cntlla",
     "Cmta", "Fnx", "Trndo", "Eclps", "R", "K", "Mterto", "Jgur",
     "Leo", "Smbra", "Lnce", "X" };
 
@@ -12,15 +12,16 @@ Carrera::Carrera(int Caballos)
     caballos = 0;
     ganancia = 0;
     perdida = 0;
+    total = 0;
 
-    A√±adirCarril();
+    AnadirCarril();
 
     for (int z = 0; z < Caballos; z++)
     {
-        A√±adirCarril();
+        AnadirCarril();
     }
 
-    cout << "\n--------------Se a√±adieron los caballos correctamente--------------" << endl;
+    cout << "\n--------------Se aÒadieron los caballos correctamente--------------" << endl;
 
 }
 
@@ -88,9 +89,9 @@ float Carrera::MostrarCarrera()
 
                 MoverCursorAbajo((tope - nodo->info.getNumero()) + 2);
 
-                cout << "¬°El caballo ganador 1 es: " << numCaballosGanadores[0] << " (" << numCaballosGanadores[0] << ") !!!" << endl << endl;
-                cout << "¬°El caballo ganador 2 es: " << numCaballosGanadores[1] << " (" << numCaballosGanadores[1] << ") !!!" << endl << endl;
-                cout << "¬°El caballo ganador 3 es: " << numCaballosGanadores[2] << " (" << numCaballosGanadores[2] << ") !!!" << endl;
+                cout << "°El caballo ganador 1 es: " << numCaballosGanadores[0] << " (" << numCaballosGanadores[0] << ") !!!" << endl << endl;
+                cout << "°El caballo ganador 2 es: " << numCaballosGanadores[1] << " (" << numCaballosGanadores[1] << ") !!!" << endl << endl;
+                cout << "°El caballo ganador 3 es: " << numCaballosGanadores[2] << " (" << numCaballosGanadores[2] << ") !!!" << endl;
 
                 break;
             }
@@ -120,11 +121,9 @@ float Carrera::MostrarCarrera()
 
     }
 
-    resultado = ganancia;
-
     cout << endl;
 
-    return resultado;
+    return total;
 }
 
 void Carrera::BorrarUltimaLinea()
@@ -133,15 +132,15 @@ void Carrera::BorrarUltimaLinea()
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(hConsole, &csbi);
 
-    // Mover el cursor una l√≠nea hacia arriba
+    // Mover el cursor una lÌnea hacia arriba
     csbi.dwCursorPosition.Y -= 1;
     SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
 
-    // Borrar la l√≠nea (sobrescribir con espacios)
-    std::cout << "\r";  // Mueve el cursor al inicio de la l√≠nea
-    std::cout << std::string(csbi.dwSize.X, ' ');  // Llena la l√≠nea con espacios
+    // Borrar la lÌnea (sobrescribir con espacios)
+    std::cout << "\r";  // Mueve el cursor al inicio de la lÌnea
+    std::cout << std::string(csbi.dwSize.X, ' ');  // Llena la lÌnea con espacios
 
-    // Vuelve a colocar el cursor al inicio de la l√≠nea
+    // Vuelve a colocar el cursor al inicio de la lÌnea
     SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
 }
 
@@ -185,20 +184,20 @@ void Carrera::RecorrerApuestas()
 
         cout << "\n--------------------------------" << endl;
 
-        cout << "\n\tT√∫ caballo fue: " << apuestas[y]->elegido << "." << endl;
+        cout << "\n\tT˙ caballo fue: " << apuestas[y]->elegido << "." << endl;
 
         ganado = CalcularApuesta(apuestas[y]->monto, apuestas[y]->elegido, apuestas[y]->caso);
 
         if (ganado == 0)
         {
-            cout << "\n\tT√∫ caballo no gan√≥, perdiste " << apuestas[y]->monto << endl;
+            cout << "\n\tT˙ caballo no ganÛ, perdiste " << apuestas[y]->monto << endl;
             perdida += apuestas[y]->monto;
         }
         else
         {
             ganancia += ganado - apuestas[y]->monto;
             total += ganancia + apuestas[y]->monto;
-            cout << "\n\tGANASTE! MONTO-> $" << ganancia << "\n\n\SALDO FINAL -> $" << total<< "." << endl;
+            cout << "\n\tGANASTE! MONTO-> $" << ganancia << "\n\n\SALDO FINAL -> $" << total << "." << endl;
         }
         cout << "\n\n--------------------------------" << endl;
     }
@@ -224,7 +223,7 @@ float Carrera::PotenciadorCarril(int carril)
     return potenciador;
 }
 
-void Carrera::A√±adirCarril()
+void Carrera::AnadirCarril()
 {
     caballos++;
     string nombre = CrearNombre();
@@ -364,15 +363,13 @@ float Carrera::CalcularApuesta(float monto, int apostado, int caso)
             multiplicador = (multCaballosGanadores[0] * 1.3f);
             resultado = monto * multiplicador; // Multiplicador de 2x
 
-            cout << "\n\tT√ö APUESTA -> $" << monto << endl;
+            cout << "\n\tT⁄ APUESTA -> $" << monto << endl;
 
             cout << "\n\tMULTIPLICADOR DE CABALLO -> " << multCaballosGanadores[0] << "x." << endl;
 
             cout << "\n\tMULTIPLICADOR DE -WIN- -> 1.3x." << endl;
 
             cout << "\n\tMULTIPLICADOR TOTAL -> " << multiplicador << "x." << endl;
-
-            cout << "RESULTADO? -> " << resultado << endl;
 
         }
         break;
@@ -387,7 +384,7 @@ float Carrera::CalcularApuesta(float monto, int apostado, int caso)
 
             resultado = monto * multiplicador; // Multiplicador de 1.5x
 
-            cout << "\n\tT√ö APUESTA -> $" << monto << endl;
+            cout << "\n\tT⁄ APUESTA -> $" << monto << endl;
 
 
             cout << "\n\tMULTIPLICADOR DE CABALLO -> " << multCaballosGanadores[indice] << "x." << endl;
@@ -411,7 +408,7 @@ float Carrera::CalcularApuesta(float monto, int apostado, int caso)
 
             resultado = monto * totalMultiplicador;
 
-            cout << "\n\tT√ö APUESTA -> $" << monto << endl;
+            cout << "\n\tT⁄ APUESTA -> $" << monto << endl;
 
             cout << "\n\tMULTIPLICADOR DE CABALLO -> " << multCaballosGanadores[indice] << "x." << endl;
 

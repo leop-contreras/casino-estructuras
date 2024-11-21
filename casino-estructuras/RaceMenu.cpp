@@ -19,9 +19,9 @@ float RaceMenu::Apostar(float saldo)
 	cout << "                                                        \n";
 	cout << "Cada caballo tiene una velocidad, que afecta tanto su \n";
 	cout << "rendimiento como el multiplicador de su apuesta.         \n";
-	cout << "Los caballos mÃ¡s rÃ¡pidos tienen menor multiplicador,     \n";
-	cout << "mientras que los mÃ¡s lentos ofrecen multiplicadores      \n";
-	cout << "mÃ¡s altos debido a su menor probabilidad de ganar.       \n";
+	cout << "Los caballos más rápidos tienen menor multiplicador,     \n";
+	cout << "mientras que los más lentos ofrecen multiplicadores      \n";
+	cout << "más altos debido a su menor probabilidad de ganar.       \n";
 	cout << "                                                        \n";
 	cout << "Ejemplo de multiplicadores basados en velocidad:         \n";
 	cout << "  - Caballo 1: Velocidad 10, Multiplicador 1.2x (Win)     \n";
@@ -29,22 +29,22 @@ float RaceMenu::Apostar(float saldo)
 	cout << "  - Caballo 3: Velocidad 5, Multiplicador 8.0x (Win)     \n";
 	cout << "                                                        \n";
 	cout << "                                                        \n";
-	cout << "Decide si prefieres apostar por un caballo rÃ¡pido con    \n";
+	cout << "Decide si prefieres apostar por un caballo rápido con    \n";
 	cout << "menores recompensas, o arriesgar con uno lento para      \n";
-	cout << "ganancias mÃ¡s grandes. Â¡Que comience la carrera!         \n";
+	cout << "ganancias más grandes. ¡Que comience la carrera!         \n";
 	cout << "                                                        \n";
-	cout << "AdemÃ¡s, ten en cuenta que conforme el carril estÃ© mÃ¡s    \n";
-	cout << "lejos, es decir, el nÃºmero del carril es mayor, el      \n";
-	cout << "caballo recibirÃ¡ un multiplicador adicional que aumentarÃ¡\n";
-	cout << "con la distancia del carril. Este multiplicador varÃ­a   \n";
-	cout << "de 1 a 1.4, lo que significa que, cuanto mÃ¡s lejos estÃ© el\n";
-	cout << "carril, mayor serÃ¡ la recompensa.                       \n";
+	cout << "Además, ten en cuenta que conforme el carril esté más    \n";
+	cout << "lejos, es decir, el número del carril es mayor, el      \n";
+	cout << "caballo recibirá un multiplicador adicional que aumentará\n";
+	cout << "con la distancia del carril. Este multiplicador varía   \n";
+	cout << "de 1 a 1.4, lo que significa que, cuanto más lejos esté el\n";
+	cout << "carril, mayor será la recompensa.                       \n";
 	cout << "                                                        \n";
 	cout << "  - Carril 1: Multiplicador 1.0x     \n";
 	cout << "  - Carril 2: Multiplicador 1.25x     \n";
 	cout << "  - Carril 3: Multiplicador 1.5x     \n";
 	cout << "                                                        \n";
-	cout << "Â¡AsÃ­ que elige sabiamente y ve si el multiplicador del   \n";
+	cout << "¡Así que elige sabiamente y ve si el multiplicador del   \n";
 	cout << "carril te da la ventaja que necesitas para ganar!        \n";
 	cout << "----------------------------------------------------------\n";
 
@@ -53,7 +53,7 @@ float RaceMenu::Apostar(float saldo)
 
 	do
 	{
-		cout << "\n\tÂ¿Con cuantos caballos desea apostar? \n1.- 5 CABALLOS - 1.5x \n2.- 10 CABALLOS 2.0X \n3.- 20 Caballos 3.0x" << endl;
+		cout << "\n\t¿Con cuantos caballos desea apostar? \n1.- 5 CABALLOS - 1.5x \n2.- 10 CABALLOS 2.0X \n3.- 20 Caballos 3.0x" << endl;
 		cin >> noCaballos;
 		cin.ignore();
 		switch (noCaballos)
@@ -77,7 +77,7 @@ float RaceMenu::Apostar(float saldo)
 			break;
 		}
 		default:
-			cout << "Seleccione una opciÃ³n valida" << endl;
+			cout << "Seleccione una opción valida" << endl;
 			break;
 		}
 	} while (!band);
@@ -96,7 +96,7 @@ float RaceMenu::Apostar(float saldo)
 
 	do
 	{
-		cout << "Â¿Cuantas apuestas desea colocar (" << max << ")?: " << endl;
+		cout << "¿Cuantas apuestas desea colocar (" << max << ")?: " << endl;
 		cin >> totalApuestas;
 		cin.ignore();
 
@@ -115,19 +115,19 @@ float RaceMenu::Apostar(float saldo)
 	for (int z = 0; z < totalApuestas; z++)
 	{
 		cout << "\n\tAPUESTA (" << z + 1 << ")." << endl;
-		cout << "Â¿Por cual desea apostar?: ";
+		cout << "¿Por cual desea apostar?: ";
 		cin >> elegido;
 		cin.ignore();
 		cout << endl;
 
 		do {
-			cout << "Â¿Que monto apostara?: ";
+			cout << "¿Que monto apostara?: ";
 			cin >> monto;
 			cin.ignore();
 			cout << endl;
 		} while (monto > saldo);
 
-		cout << "Â¿Por cual desea apostar? \n\n\t1.- WIN 1.3x \n\t2.- PLACE 1.2x \n\t3.- SHOW 1.1X \n\nSu apuesta: ";
+		cout << "¿Por cual desea apostar? \n\n\t1.- WIN 1.3x \n\t2.- PLACE 1.2x \n\t3.- SHOW 1.1X \n\nSu apuesta: ";
 		cin >> caso;
 		cin.ignore();
 		cout << endl;
@@ -144,7 +144,7 @@ float RaceMenu::Apostar(float saldo)
 
 	resultado = carrera.MostrarCarrera();
 
-	cout << "SALDO FINAL -> " << resultado + saldo<< "." << endl;
+	cout << "SALDO FINAL -> " << resultado + saldo << "." << endl;
 
 	cout << "\nPRESIONE CUALQUIER TECLA PARA CONTINUAR." << endl;
 

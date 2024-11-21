@@ -137,9 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackJack.h" />
+    <ClInclude Include="Carrera.h" />
     <ClInclude Include="Casino.h" />
     <ClInclude Include="RaceMenu.h" />
-    <ClInclude Include="Carrera.h" />
     <ClInclude Include="Poker.h" />
     <ClInclude Include="Ruta.h" />
   </ItemGroup>
