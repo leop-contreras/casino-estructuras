@@ -62,6 +62,8 @@ int BackJack::Puntaje(stack<Carta> pila)
         }
     }
 
+    if (puntaje > 21) return -1;
+
     return puntaje; 
 }
 int BackJack::Jugar(int apuesta)
