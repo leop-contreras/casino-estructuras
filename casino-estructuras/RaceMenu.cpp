@@ -1,9 +1,8 @@
-#include "Ruta.h"
-#include "Carrera.h"
+#include "RaceMenu.h"
 
 using namespace std;
 
-float ApostarMenu(float saldo)
+float RaceMenu::Apostar(float saldo)
 {
 	system("cls");
 	int noCaballos, elegido;
@@ -121,10 +120,12 @@ float ApostarMenu(float saldo)
 		cin.ignore();
 		cout << endl;
 
-		cout << "¿Que monto apostara?: ";
-		cin >> monto;
-		cin.ignore();
-		cout << endl;
+		do {
+			cout << "¿Que monto apostara?: ";
+			cin >> monto;
+			cin.ignore();
+			cout << endl;
+		} while (monto > saldo);
 
 		cout << "¿Por cual desea apostar? \n\n\t1.- WIN 1.3x \n\t2.- PLACE 1.2x \n\t3.- SHOW 1.1X \n\nSu apuesta: ";
 		cin >> caso;
@@ -154,42 +155,6 @@ float ApostarMenu(float saldo)
 	return saldo;
 }
 
-/*int main()
+RaceMenu::RaceMenu()
 {
-	setlocale(LC_ALL, "");
-	int opc, velocidad, longitud, pasos;
-	float saldo = 10000;
-	string nombre;
-	do
-	{
-		cout << "CARRERA DE CABALLOS" << endl;
-		cout << "MENú \n1.- Apostar \n2.- Ver carrera (Sin apostar) \n3.- Regresar" << endl;
-		cin >> opc;
-		cin.ignore();
-
-		switch (opc)
-		{
-		case 1:
-		{
-			cout << "\n\tAPOSTAR" << endl;
-			saldo = Apostar(saldo);
-			break;
-		}
-		case 2:
-		{
-			cout << "\n\tCARRERA SIN APOSTAR" << endl;
-
-			break;
-		}
-		case 3:
-		{
-			cout << "" << endl;
-			break;
-		}
-		default:
-			cout << "INTENTE DE NUEVO" << endl;
-			break;
-		}
-	} while (opc != 3);
-}*/
-
+}
