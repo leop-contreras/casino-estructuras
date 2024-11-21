@@ -69,10 +69,8 @@ int Casino::indiceJugador(Jugador jugador)
 	return -1;
 }
 
-void Casino::seleccionJugadores(vector<Jugador>* jugadoresActivos, int nJugadores)
+void Casino::seleccionJugadores(int nJugadores)
 {
-	jugadoresActivos->clear();
-	jugadoresActivos->shrink_to_fit();
 	int opc, contador = 0;
 
 	do {
@@ -85,9 +83,9 @@ void Casino::seleccionJugadores(vector<Jugador>* jugadoresActivos, int nJugadore
 		cout << "\n\n";
 
 		cout << "Seleccionados: " << endl;
-		for (int i = 0; i < jugadoresActivos->size(); i++) {
-			cout << (*jugadoresActivos)[i].nombre;
-			if (i < (jugadoresActivos->size()-1)) cout << ", ";
+		for (int i = 0; i < jugadoresActivos.size(); i++) {
+			cout << jugadoresActivos[i].nombre;
+			if (i < (jugadoresActivos.size()-1)) cout << ", ";
 		}
 		cout << "\n\n";
 
@@ -114,11 +112,22 @@ void Casino::seleccionJugadores(vector<Jugador>* jugadoresActivos, int nJugadore
 				system("pause");
 			}
 			else {
-				jugadoresActivos->push_back(jugadores[(opc - 1)]);
+				jugadoresActivos.push_back(jugadores[(opc - 1)]);
 				contador++;
 			}
 		}
 	} while (contador < nJugadores || nJugadores == -1);
+}
+
+void Casino::vaciarJugadoresActivos()
+{
+	for (int i = 0; i < jugadoresActivos.size(); i++) {
+		if (jugadoresActivos[i].id == jugadores[i].id) {
+			jugadores[i].balance = jugadoresActivos[i].balance;
+		}
+	}
+	jugadoresActivos.clear();
+	jugadoresActivos.shrink_to_fit();
 }
 
 void Casino::mostrarJugadores()

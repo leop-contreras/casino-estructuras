@@ -162,8 +162,6 @@ void main() {
 	Poker poker;
 	BackJack blackJack;
 
-	vector<Jugador> jugadoresActivos;
-
 	int opc, apuesta;
 	do {
 		system("cls");
@@ -181,21 +179,36 @@ void main() {
 			casino.salidaJugador();
 			break;
 		case 3:
+			casino.seleccionJugadores(1);
+			if (casino.jugadoresActivos.size() < 1) break;
+			system("cls");
 			cout << "Cuanto quieres apostar?  ";
 			cin >> apuesta;
-			apuesta = blackJack.Jugar(500);
+			cin.ignore();
+			casino.jugadoresActivos[0].balance = blackJack.Jugar(500);
 			cout << endl;
+			casino.vaciarJugadoresActivos();
 			system("pause");
 			break;
 		case 4:
-			casino.seleccionJugadores(&jugadoresActivos,POKER_MAX_NUMBER_PLAYERS);
-			if(jugadoresActivos.size() < 1) break;
+			casino.seleccionJugadores(POKER_MAX_NUMBER_PLAYERS);
+			if(casino.jugadoresActivos.size() < 1) break;
 			system("cls");
 			poker = Poker();
-			poker.play(&jugadoresActivos);
+			poker.play(&casino.jugadoresActivos);
+			casino.vaciarJugadoresActivos();
 			break;
 		case 5:
-			Apostar(1000);
+			casino.seleccionJugadores(1);
+			if (casino.jugadoresActivos.size() < 1) break;
+			system("cls");
+			cout << "Cuanto quieres apostar?  ";
+			cin >> apuesta;
+			cin.ignore();
+			casino.jugadoresActivos[0].balance = Apostar(1000);;
+			cout << endl;
+			casino.vaciarJugadoresActivos();
+			system("pause");
 			break;
 		}
 	} while (opc != 6);

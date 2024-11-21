@@ -26,9 +26,11 @@ public:
 	int salidaJugador();
 	int modificarBalance(Jugador, int);
 	int indiceJugador(Jugador);
-	void seleccionJugadores(vector<Jugador>*, int nJugadores = -1);
+	void seleccionJugadores(int nJugadores = -1);
+	void vaciarJugadoresActivos();
 	void mostrarJugadores();
 	string generarID();
+	vector<Jugador>jugadoresActivos;
 private:
 	vector<Jugador> jugadores;
 };
